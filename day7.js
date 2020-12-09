@@ -11,7 +11,11 @@ function successListener() {
     treat_rules(data);
     console.log(bags)
     setParents(bags);
-    console.log(bags.filter(a => a.HasGold));
+	let gold_bags = bags.filter(a => a.HasGold).sort((a, b) => a.Color < b.Color ? -1 : 1);
+	gold_bags = gold_bags.filter(function(item, pos) {
+		return gold_bags.indexOf(item) == pos;
+	})
+	console.log(gold_bags)
 }
 
 function failureListener(err) {  
@@ -33,11 +37,11 @@ function getBag(color){
             return (bags[x]);
 }
 
-function setParents(bags)
+function setParents(bags_list)
 {
-    for (let x in bags)
-        if (bags[x].HasGold)
-            setParentsGold(bags[x])
+    for (let x in bags_list)
+        if (bags_list[x].HasGold)
+            setParentsGold(bags_list[x])
 }
 
 function setParentsGold(bag)
@@ -91,8 +95,8 @@ function treat_rules(rules)
                         Parents: [cur_bag]
                     });
                     found = bags[bags.length - 1];
-                 }
-                cur_bag.Parents.push(found)
+				}
+				found.Parents.push(cur_bag)
                 console.log(found)
                 if (color == "shiny gold")
                     cur_bag.HasGold = true;
