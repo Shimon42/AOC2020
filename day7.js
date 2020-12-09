@@ -1,5 +1,29 @@
+// https://adventofcode.com/2020/day/7
+
 var bags = [];
 
+// -- XHR to get the input
+
+function successListener() {  
+  var data = this.responseText.split("\n"); // split the rules
+    console.log(data)
+    bags = []
+    treat_rules(data);
+    console.log(bags)
+}
+
+function failureListener(err) {  
+  console.log('Request failed', err);  
+}
+
+var request = new XMLHttpRequest();  
+request.onload = successListener;  
+request.onerror = failureListener;  
+request.open('get', 'https://adventofcode.com/2020/day/7/input', true);  
+request.send();
+
+
+// -- functions
 function getBag(color){
     for (let x in bags)
         if (bags[x].Color == color)
@@ -14,7 +38,7 @@ function treat_rules(rules)
             continue;
         var cur_bag;
         let res = rules[x].split(" bags contain ");
-        let contain_split = res[1].split(", ");
+        let contain_split = res[1].split(", "); // split the bags list in the cur bag
         cur_bag = {
             Color: res[0],
             Contain: []
@@ -26,7 +50,7 @@ function treat_rules(rules)
             {
                 console.log(contain_split[y])
 
-                let bag_split = contain_split[y].match(/(\d)([a-z ]*) bag(s|)/);
+                let bag_split = contain_split[y].match(/(\d)([a-z ]*) bag(s|)/); // match number of bags of one color in cur_bag
                 console.log(bag_split)
                 let count = bag_split[1].trim();
                 let color = bag_split[2].trim();
