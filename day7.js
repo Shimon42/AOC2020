@@ -24,7 +24,6 @@ request.onerror = failureListener;
 request.open('get', 'https://adventofcode.com/2020/day/7/input', true);  
 request.send();
 
-
 // -- functions
 var bags = [];
 
