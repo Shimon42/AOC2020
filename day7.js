@@ -10,6 +10,8 @@ function successListener() {
     bags = []
     treat_rules(data);
     console.log(bags)
+    setParents(bags);
+    console.log(bags.filter(a => a.HasGold));
 }
 
 function failureListener(err) {  
@@ -24,25 +26,51 @@ request.send();
 
 
 // -- functions
+var bags = [];
+
 function getBag(color){
     for (let x in bags)
         if (bags[x].Color == color)
             return (bags[x]);
 }
 
+function setParents(bags)
+{
+    for (let x in bags)
+        if (bags[x].HasGold)
+            setParentsGold(bags[x])
+}
+
+function setParentsGold(bag)
+{
+    var parents = bag.Parents;
+    if (parents)
+        for (let x in parents)
+        {
+            parents[x].HasGold = true;
+            setParentsGold(parents[x]);
+        }
+    
+}
+
 function treat_rules(rules)
 {
-   for (let x in rules)
+    
+    for (let x in rules)
     {
-        if (!rules[x].length)
+    if (!rules[x].length)
             continue;
         var cur_bag;
         let res = rules[x].split(" bags contain ");
-        let contain_split = res[1].split(", "); // split the bags list in the cur bag
-        cur_bag = {
-            Color: res[0],
-            Contain: []
-         };
+        let contain_split = res[1].split(", ");
+        if (!(cur_bag = getBag(res[0])))
+            cur_bag = {
+                Color: res[0],
+                Contain: [],
+                HasGold: false,
+                Parents: [],
+                ObjectType: "Bag"
+             };
         console.log(contain_split)
         if (res[1] != "no other bags.")
         {
@@ -50,7 +78,7 @@ function treat_rules(rules)
             {
                 console.log(contain_split[y])
 
-                let bag_split = contain_split[y].match(/(\d)([a-z ]*) bag(s|)/); // match number of bags of one color in cur_bag
+                let bag_split = contain_split[y].match(/(\d)([a-z ]*) bag(s|)/);
                 console.log(bag_split)
                 let count = bag_split[1].trim();
                 let color = bag_split[2].trim();
@@ -59,11 +87,16 @@ function treat_rules(rules)
                 {
                     bags.push({
                         Color: color,
-                        Contain: []
+                        Contain: [],
+                        HasGold: false,
+                        Parents: [cur_bag]
                     });
                     found = bags[bags.length - 1];
                  }
+                cur_bag.Parents.push(found)
                 console.log(found)
+                if (color == "shiny gold")
+                    cur_bag.HasGold = true;
                 cur_bag.Contain.push(getBag(color));
             }
         }
