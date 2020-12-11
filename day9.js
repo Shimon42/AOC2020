@@ -56,3 +56,37 @@ function treat_code(data)
         console.log(res)
     }
 }
+/* PART TWO NOT WORKING
+function treat_code(data)
+{
+    let clone = JSON.parse(JSON.stringify(data));
+    let head = clone.slice(0,25).map(a => parseInt(a));
+    let body = data.slice(25, data.length).map(a => parseInt(a))
+    let check = false;
+    console.log(head)
+    console.log(body)
+    for (let x = 0; x < body.length; x++)
+    {
+        let res; 
+       if ((res = is_add(body[x], head)) == false)
+       {
+            console.log("FOUND BAD")
+            console.log(body[x])
+             console.log(head)
+            check = body[x];
+       } else if (check != false)
+       {
+         console.log("FOUND BADEND")
+            console.log(body[x])
+             console.log(head)
+            console.log("RES: %d", check + body[x]);
+            console.log("res-1 %d", check + body[x - 1])
+            check = true;
+            return;
+        }
+        head.shift()
+        head.push(body[x])
+        console.log(head)
+        console.log(res)
+    }
+}*/
