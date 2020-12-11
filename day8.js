@@ -76,31 +76,38 @@ function treat_code(codes)
 }
 */
 
+//PART TWO (NOT WORKING)
 function treat_code(codes)
 {
-    let acc = 0;
-   
-  
+
     let start = codes.length - 1;
   //  let last = found_last_jmp(codes); 
    let last_nop = found_last_nop(codes);
     let clone = JSON.parse(JSON.stringify(codes));
-    while (start >= 0 && !stop)
+    let acc = 0;
+    for (let x = 0; x < 2; x++)
     {
-        console.log(start)
-        for (let x = 0; x < 2; x++)
+        acc = 0;
+        let start = clone.length - 1;
+       stop = false;
+        while (start >= 0 && !stop)
         {
              let done = [];
-              let i = 0;
-             codes = JSON.parse(JSON.stringify(clone));
-            last = (x == 0 ? found_last_jmp(codes, start) : found_last_nop(codes, start))
+             let i = 0;
+            console.log(start)
+          
+           
+            codes = JSON.parse(JSON.stringify(clone));
+            codes = (x == 0 ? found_last_jmp(clone, start) : found_last_nop(clone, start))
+    
             while (done.indexOf(i) == -1 && !stop)
             {
                 if (!codes[i] || codes[i] == "")
                 {
                     console.log("NATURAL END") 
-                     console.log(acc);
-                   return;
+                    console.log(acc);
+                    stop = true;
+                    break;
                 }
                 let code = codes[i];
                 done.push(i);
@@ -112,8 +119,8 @@ function treat_code(codes)
                 else
                     i++;
             }
+            start--;
         }
-        start = last - 1;
     }
     console.log(acc);
 }
